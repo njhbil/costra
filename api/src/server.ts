@@ -1,5 +1,6 @@
-import express, { type Request, type Response } from 'express';
+import express from 'express';
 import { router as routerAuth } from './auth/routersAuth';
+import { router as routerCompany } from './company/routerCompany';
 
 const app = express();
 const PORT = 3000;
@@ -7,6 +8,7 @@ const PORT = 3000;
 app.use(express.json());
 
 app.use('/', routerAuth);
+app.use('/', routerCompany);
 
 
 app.listen(PORT, () => {

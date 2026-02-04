@@ -100,10 +100,7 @@ const loginUser = async (req : Request, res : Response) => {
             token
         });
 
-        
-
-
-
+       
     } catch (err: any) {
         return res.status(500).json({
             message: "Terjadi kesalahan pada server",
