@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import db from '../config/database';
 import { PoolConnection } from 'mysql2/promise';
 
+
 const createCompany = async (req : Request, res : Response) => {
 
     let connection : PoolConnection | null = null;
@@ -59,4 +60,78 @@ const createCompany = async (req : Request, res : Response) => {
     }
 };
 
-export { createCompany };
+
+const getCompany = async (req : Request , res : Response)=> {
+
+    try {
+    const userId = (req as any).user.id;
+
+    if (!userId){
+        return res.status(401).json({
+            message : 'Silahkan Login terlebih dahulu'
+        });
+    };
+
+    const [companies] = await db.query(
+        'SELECT c.id, c.name, c.address, cu.role FROM company c JOIN company_user cu ON c.id = cu.user_company WHERE cu.user_id = ?', [userId]
+    ) as any[];
+
+    if (companies.length === 0){
+        return res.status(200).json({
+            message : 'Tidak ada perusahaan yang terhubung'
+        });
+    }
+
+    return res.status(200).json({
+        message : 'Succes',
+        data : companies[0]
+
+    });
+} catch(err : any){
+    return res.status(500).json({
+        message : err.message
+    })
+}
+}
+
+const deleteCompany = async (req : Request, res : Response)=> {
+    const userId = (req as any).user.id;
+    const { id } = req.params;
+    
+    try{
+
+    const [acces] = await db.query(
+        'SELECT role FROM company_user WHERE user_id = ? AND user_company = ?', [userId, id]
+    ) as any[];
+
+    if (acces.length === 0){
+        return res.status(404).json({ message: 'Perusahaan tidak ditemukan atau Anda tidak punya akses' });
+    }
+
+    if(acces[0].role !== 'owner'){
+        return res.status(403).json({
+            message : 'Only owner can delete company'
+        })
+    }
+    const [result] = await db.query(
+        'DELETE FROM company WHERE id = ?', [id]
+    ) as any[];
+
+    if (result.affectedRows === 0){
+        return res.status(404).json({
+            message: 'Failed to delete the company'
+    });
+}
+    res.status(200).json({
+        status : 'success',
+        message : 'Company success to delete'
+    })
+} catch (err : any){
+        return res.status(500).json({
+            message : err.message
+        });
+    }
+}
+
+
+export { createCompany, getCompany, deleteCompany};
