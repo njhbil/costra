@@ -1,8 +1,9 @@
 import express from "express";
 import { getUser } from "./controllerUser";
+import { verifyToken } from "../middleware/authMiddleware";
 
-const app = express.Router();
+const router = express.Router();
 
-app.get('/getUser', getUser)
+router.get('/getUser', verifyToken, getUser)
 
-export { app };
+export { router };
