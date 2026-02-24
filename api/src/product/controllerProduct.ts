@@ -96,16 +96,18 @@ try {
 }
 
 const getProductById = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const userId = (req as any).user.id;
-    if (!userId) {
-        return res.status(401).json({
+
+    try {
+        const { id } = req.params;
+        const userId = (req as any).user.id;
+        if (!userId) {
+            return res.status(401).json({
             message : 'Unauthorized'
         });
-    }
-    try {
+        }
         const [products] = await db.query(
-            'SELECT p.name, ', [userId, id] ) as any[];
+            'SELECT p.name, p.selling_price, cu.user_company FROM products p JOIN company_user cu ON p.company_id = cu.user_company WHERE cu.user_id = ? AND p.id = ?', [userId, id] ) as any[];
+
         if (products.length === 0) {
             return res.status(404).json({
                 message : 'Product not found'
@@ -122,8 +124,43 @@ const getProductById = async (req: Request, res: Response) => {
 }
 
 const updateProduct = async (req: Request, res: Response) => {
-    //implementation of update product
-}
+    try {
+        const { id } = req.params;
+        const { name, hpp, profit_type, profit_value, stock } = req.body;
+        const userId = (req as any).user.id;
+        if (!userId) {
+            return res.status(401).json({
+                message : 'Unauthorized'
+            });
+        }
+        const [access] = await db.query(
+            'SELECT role FROM company_user WHERE user_id = ? AND user_company = (SELECT company_id FROM products WHERE id = ?)', [userId, id]
+        ) as any[]; 
+        if (access.length === 0 || access[0].role !== 'owner' || access[0].role !== 'admin' ) {
+            return res.status(403).json({
+                message : 'Forbidden'
+            });
+        }
+        const sellingPrice = profit_type === 'PERCENT' ? hpp + (hpp * profit_value / 100) : hpp + profit_value;
+        const [updatedProduct] = await db.query(
+            'UPDATE products SET name = ?, hpp = ?, profit_type = ?, profit_value = ?, stock = ?, selling_price = ? WHERE id = ?', [name, hpp, profit_type, profit_value, stock, sellingPrice, id]
+        ) as any[] ;
+        
+        if (updatedProduct.affectedRows === 0) {
+            return res.status(404).json({
+                message : 'Product not found'
+            });
+        }
+        return res.status(200).json({
+            message : 'Product updated successfully'
+        });
+
+    } catch (error : any) {
+        return res.status(500).json({
+            message : error.message
+    }); 
+    }
+    }
 
 const deleteProduct = async (req: Request, res: Response) => {
     const userId = (req as any).user.id;

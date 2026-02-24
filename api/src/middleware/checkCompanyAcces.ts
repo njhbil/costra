@@ -51,7 +51,7 @@ const checkAccessAdmin = async (req : Request, res : Response, next : NextFuncti
         });
     }
 
-    if (rows[0].role === 'owner' || 'admin'){
+    if (rows[0].role === 'owner' || rows[0].role === 'admin'){
         next();
     } else {
         return res.status(401).json({
@@ -83,7 +83,7 @@ const checkAccessStaff = async (req : Request, res : Response, next : NextFuncti
         });
     }
 
-    if (rows[0].role === 'owner' || 'admin'|| 'staff'){
+    if (rows[0].role === 'owner' || rows[0].role === 'admin' || rows[0].role === 'staff'){
         next();
     } else {
         return res.status(401).json({
