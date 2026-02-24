@@ -8,8 +8,8 @@ import { verifyToken } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.get('/getCompany',verifyToken, getCompany);
-router.post('/createCompany', verifyToken, createCompany);
-router.delete('/deleteCompany/:id', verifyToken, deleteCompany);
+router.get('/company',verifyToken, getCompany);
+router.post('/company', verifyToken, createCompany);
+router.delete('/company/:id', verifyToken, deleteCompany);
 
 export { router } ;
