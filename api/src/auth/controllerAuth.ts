@@ -8,10 +8,10 @@ import jwt from 'jsonwebtoken'
 const createUser = async (req : Request, res : Response) => {
 
     try {
-        const { username , email, password} = req.body;
+        const { username, name , email, phone_number, password} = req.body;
 
-    if (!username || !email || !password){
-        return res.status(201).json({
+    if (!username || !email || !password || !name || !phone_number){
+        return res.status(400).json({
             message : "Semua data (username, email, password) wajib diisi!"
         });
     }
@@ -40,7 +40,7 @@ const createUser = async (req : Request, res : Response) => {
     const hashPassword = await argon2.hash(password)
 
     await db.query(
-        'INSERT INTO users (id, username, email, password) VALUES (?, ?, ?, ?)', [id, username, email, hashPassword]
+        'INSERT INTO users (id, username, name, email, phone_number, password) VALUES (?, ?, ?, ?, ?, ?)', [id, username, name, email, phone_number, hashPassword]
     );
     return res.status(201).json({
         message: 'Register berhasil'
@@ -58,9 +58,9 @@ const createUser = async (req : Request, res : Response) => {
 
 const loginUser = async (req : Request, res : Response) => {
     try {
-        const { username, email, password } = req.body;
+        const { email, password } = req.body;
 
-        if (!username && !email){
+        if (!email){
             return res.status(400).json({
                 message: 'username atau Email wajib diisi'
             });
@@ -74,19 +74,19 @@ const loginUser = async (req : Request, res : Response) => {
         }
 
         const [check] = await db.query(
-            'SELECT * FROM users WHERE username = ? OR email = ?', [username, email]
+            'SELECT * FROM users WHERE email = ?', [ email ]
         ) as any[];
 
         if (check.length === 0){
-            return res.status(401).json({
-                message : 'username tidak ditemukan'
+            return res.status(404).json({
+                message : 'email tidak ditemukan'
             });
         };
 
         const isMatch = await argon2.verify(check[0].password, password );
 
         if (!isMatch){
-            return res.status(401).json({ message : 'password tidak sesuai'});
+            return res.status(400).json({ message : 'password tidak sesuai'});
         };
 
         const token = jwt.sign(
