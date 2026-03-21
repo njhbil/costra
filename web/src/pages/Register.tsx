@@ -10,10 +10,35 @@ function Register() {
   const [username, setUsername] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isAgreed, setIsAgreed] = useState(false);
   const navigate = useNavigate();
+  const [modalMsg, setModalMsg] = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [alert, setAlert] = useState('')
 
-  const handleRegister = async (e) => {
+  const isNameValid = name.length >= 3;
+  const isPhoneNumber = /^(08|62)\d{8,11}$/.test(phone_number);
+  const isEmailValid = email.includes('@')&& email.includes('.');
+  const isPasswordValid = password.length >= 8;
+  const passwordMatch = password === confirmPassword;
+  const isAgreedValid = isAgreed ;
+  const canRegisterValid = isNameValid && isPhoneNumber&&  isEmailValid && isPasswordValid && passwordMatch && isAgreedValid;
+ 
+
+const handleCloseModal = () => {
+    setShowModal(false);
+    
+    // Hanya pindah halaman jika registrasi benar-benar sukses
+    if (alert === 'REGISTER SUCCESS') {
+      navigate('/login');
+    }
+  };
+
+  const handleRegister = async (e : React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const  response = await fetch('http://localhost:3000/register', {
@@ -24,14 +49,24 @@ function Register() {
 
       const data = await response.json();
       if (response.ok){
-        alert('Register Berhasil')
-        navigate('/login')
+        setAlert('REGISTER SUCCESS')
+         setShowModal(true);
+        setModalMsg('Akun Anda berhasil dibuat! Silakan login.')
       } else {
-        alert (`Gagal : ${data.message}`)
+        setAlert('REGISTER FAIL')
+        setModalMsg(`${data.message}`)
+        setShowModal(true);
       }
-    } catch (error) { console.error("Koneksi Eror :", error)
-
+      
+    } catch (error) { 
+      setAlert('REGISTER FAIL')
+      console.error("Koneksi Eror :", error)
+      setModalMsg('Connection Error')
+      setShowModal(true);
+    } finally{
+      setIsLoading(false)
     }
+
   }
   
   return (
@@ -42,7 +77,7 @@ function Register() {
           <a className="btn btn-ghost text-2xl font-bold text-primary">COSTRA</a>
         </div>
         <div className="flex-none">
-          <button className="btn btn-ghost">Kembali ke Home</button>
+          <button className="btn btn-ghost">Back to Home</button>
         </div>
       </div>
 
@@ -51,7 +86,7 @@ function Register() {
         <div className="card w-full max-w-2xl bg-base-100 shadow-2xl">
           <div className="card-body">
             <h2 className="card-title text-3xl font-bold justify-center mb-6">
-              Daftar Akun Baru
+              REGISTER
             </h2>
             
             <form onSubmit={handleRegister}>
@@ -59,15 +94,17 @@ function Register() {
                 {/* Nama Lengkap */}
                 <div className="form-control md:col-span-2">
                   <label className="label">
-                    <span className="label-text font-semibold">Nama Lengkap</span>
+                    <span className="label-text font-semibold">Full Name</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Full name"
                     className="input input-bordered w-full"
                     value={name}
                   onChange={(e)=> setName(e.target.value)}
                   />
+                  { !isNameValid && name.length > 0 && <p className='text xs text-red-500'>Please enter a valid name</p>
+                  }
                 </div>
 
                 {/* Username */}
@@ -77,7 +114,7 @@ function Register() {
                   </label>
                   <input
                     type="text"
-                    placeholder="johndoe"
+                    placeholder="Username"
                     className="input input-bordered w-full"
                     value={username}
                   onChange={(e)=> setUsername(e.target.value)}
@@ -87,15 +124,19 @@ function Register() {
                 {/* Phone */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-semibold">No. Telepon</span>
+                    <span className="label-text font-semibold">Phone Number</span>
                   </label>
                   <input
                     type="tel"
-                    placeholder="08123456789"
+                    placeholder="Phone Number"
                     className="input input-bordered w-full"
                     value={phone_number}
                   onChange={(e)=> setPhoneNumber(e.target.value)}
                   />
+                  { 
+                  !isPhoneNumber && phone_number.length > 0 &&
+                  <p className='text xs text-red-500'>Please enter a valid phone number</p>
+                  }
                 </div>
 
                 {/* Email */}
@@ -105,11 +146,13 @@ function Register() {
                   </label>
                   <input
                     type="email"
-                    placeholder="nama@email.com"
+                    placeholder="Email"
                     className="input input-bordered w-full"
                     value={email}
                   onChange={(e)=> setEmail(e.target.value)}
                   />
+                  { !isEmailValid && email.length > 0 && <p className='text xs text-red-500'>Please enter a valid email</p>
+                  }
                 </div>
 
                 {/* Password */}
@@ -119,28 +162,36 @@ function Register() {
                   </label>
                   <input
                     type="password"
-                    placeholder="Minimal 8 karakter"
+                    placeholder="At Least 8 Character"
                     className="input input-bordered w-full"
                     value={password}
                   onChange={(e)=> setPassword(e.target.value)}
                   />
-                  <label className="label">
-                    <span className="label-text-alt text-gray-500">
-                      Gunakan kombinasi huruf, angka & simbol
-                    </span>
-                  </label>
+                  { !isPasswordValid && password.length == 0 && 
+                  <p className="label-text-alt text-gray-500"> Use a combination of letters and Symbols</p>
+                  }
+                  { !isPasswordValid && password.length > 0 && 
+                  <p className="label-text-alt text-red-500"> Password must be at least 8 characters long</p>
+                  }
+        
+                
                 </div>
 
                 {/* Confirm Password */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-semibold">Konfirmasi Password</span>
+                    <span className="label-text font-semibold">Password Confirmation</span>
                   </label>
                   <input
                     type="password"
-                    placeholder="Ketik ulang password"
+                    value = {confirmPassword}
+                    placeholder="Re-enter password"
                     className="input input-bordered w-full"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                   />
+                  { !passwordMatch && confirmPassword.length > 0 && 
+                  <p className="label-text-alt text-red-500">Password do not match</p>
+                  }
                 </div>
 
               </div>
@@ -148,11 +199,17 @@ function Register() {
               {/* Terms and Conditions */}
               <div className="form-control mt-6">
                 <label className="label cursor-pointer justify-start gap-3">
-                  <input type="checkbox" className="checkbox checkbox-primary" />
+                  <input 
+                  type="checkbox" 
+                  className="checkbox checkbox-primary" 
+                  checked={isAgreed}
+                  onChange={(e) => setIsAgreed(e.target.checked)}
+                  />
+                  
                   <span className="label-text">
-                    Saya setuju dengan{' '}
-                    <a className="link link-primary">syarat dan ketentuan</a>{' '}
-                    yang berlaku
+                    I Agree with{' '}
+                    <a className="link link-primary">Terms and Condisitions</a>{' '}
+
                   </span>
                 </label>
               </div>
@@ -160,9 +217,16 @@ function Register() {
               {/* Register Button */}
               <div className="form-control mt-6">
                 <button 
-        
+                disabled={!canRegisterValid || isLoading}
                 type="submit" className="btn btn-primary w-full">
-                  Daftar Sekarang
+                 {isLoading ? (
+                    <>
+                    <span className='loading loading-spinner'>
+                    </span>
+                  </>
+                  ) : (
+                    "Register"
+                  )}
                 </button>
               </div>
             </form>
@@ -203,6 +267,22 @@ function Register() {
           </div>
         </div>
       </div>
+      <div className={`modal ${showModal ? 'modal-open' : ''}`}>
+        <div className="modal-box border-t-4 border-error">
+          <h3 className="font-bold text-lg text-error">{alert}</h3>
+            <p className="py-4">{modalMsg}</p>
+      <div className="modal-action">
+      <button 
+        className="btn btn-primary" 
+            onClick={handleCloseModal}
+      >
+        Tutup
+      </button>
+    </div>
+  </div>
+  {/* Klik di luar untuk tutup */}
+ <div className="modal-backdrop" onClick={handleCloseModal}></div>
+</div>
     </div>
   );
 }

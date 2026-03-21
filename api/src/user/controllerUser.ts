@@ -11,12 +11,22 @@ const getUser = async (req : Request, res : Response) => {
     ) as any[];
 
     if (rows.length === 0){
+        const [rowsUser] = await db.query(
+            'SELECT * FROM users WHERE id = ?', [userId]
+        ) as any[];
+        const userData = {
+            id : rowsUser[0].id,
+            username : rowsUser[0].username,
+            name : rowsUser[0].name,
+            email : rowsUser[0].email,
+            phone_number : rowsUser[0].phone_number,
+        }; 
         return res.status(200).json({
+            status : 'success',
             message: 'User ditemukan tapi belum memiliki perusahaan',
-            user: { id: userId }, 
-            companies: []
-        })
-    } 
+            data : userData
+        });
+    } ;
 
        const userData = {
         id : rows[0].id,

@@ -1,8 +1,35 @@
 import { Link, useNavigate } from 'react-router-dom';
 import cotraLogo from '../assets/Costra.png';
+import { useEffect } from 'react';
+
 
 function Home() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async() => {
+      try {
+        const token = localStorage.getItem('token');
+        if(!token){
+          return ;
+        }
+        const response = await fetch('http://localhost:3000/user', {
+          method : 'get',
+          headers : {
+            'Authorization' : `Bearer ${token}`
+          }
+          
+        });
+
+        if (response.ok){
+          navigate('dashboard')
+        }
+      } catch (error) {
+        console.error('Oops! You need to login first ', error)
+      }
+    }
+    checkSession();
+  }, [navigate]);
 
   return (
     <div className="min-h-screen overflow-hidden bg-white">
@@ -13,9 +40,8 @@ function Home() {
             <img src={cotraLogo} alt="COSTRA" className="h-10 w-auto" />
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">Tentang</a>
-            <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">Fitur</a>
-            <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">Harga</a>
+            <a href="#about" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">Tentang</a>
+            <a href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">Fitur</a>
             <button 
             onClick={() => navigate('/login')}
             className="text-sm border border-gray-300 px-6 py-2 rounded text-gray-900 hover:border-gray-400 transition-colors font-semibold"
@@ -31,7 +57,7 @@ function Home() {
       </nav>
 
       {/* Hero Section - Premium Luxury */}
-      <section className="relative min-h-[95vh] bg-linear-to-br from-white via-gray-50 to-white overflow-hidden flex items-center">
+      <section id='about' className="relative min-h-[95vh] bg-linear-to-br from-white via-gray-50 to-white overflow-hidden flex items-center">
         {/* Subtle decorative elements */}
         <div className="absolute top-20 right-10 w-96 h-96 bg-teal-50/30 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 left-20 w-72 h-72 bg-indigo-50/30 rounded-full blur-3xl"></div>
@@ -41,7 +67,7 @@ function Home() {
             {/* Left - Premium Typography */}
             <div className="space-y-8">
               <div className="space-y-6">
-                <div className="inline-block">
+                <div className="inline-block" >
                   <p className="text-xs tracking-widest text-gray-500 uppercase font-light">Solusi Manajemen</p>
                 </div>
                 <h1 className="text-6xl sm:text-7xl font-bold text-gray-900 leading-tight tracking-tight">
@@ -53,11 +79,10 @@ function Home() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-8">
-                <button className="px-8 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-all font-semibold text-sm tracking-wide">
+                <button 
+                onClick={()=> navigate('login')}
+                className="px-8 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-all font-semibold text-sm tracking-wide">
                   Mulai Sekarang
-                </button>
-                <button className="px-8 py-3 border border-gray-300 text-gray-900 rounded-md hover:border-gray-400 transition-all font-semibold text-sm tracking-wide">
-                  Lihat Demo
                 </button>
               </div>
 
@@ -122,7 +147,7 @@ function Home() {
       </section>
 
       {/* Features Section - Premium Grid */}
-      <section className="py-32 bg-white border-t border-gray-100">
+      <section id='features' className="py-32 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-4">Capabilities</p>
@@ -207,7 +232,7 @@ function Home() {
               "COSTRA telah mengubah cara kami mengelola operasional bisnis. Interface yang intuitif dan fitur yang powerful membuat pekerjaan kami jauh lebih efisien."
             </p>
             <div>
-              <p className="text-sm font-bold text-gray-900">Ahmad Rizki</p>
+              <p className="text-sm font-bold text-gray-900"> Nabil Akbar</p>
               <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mt-1">Founder, PT Teknologi Maju</p>
             </div>
           </blockquote>
@@ -222,11 +247,10 @@ function Home() {
             Bergabunglah dengan ratusan perusahaan yang telah mengoptimalkan operasional mereka bersama COSTRA.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <button className="px-8 py-3 bg-white text-gray-900 rounded-md hover:bg-gray-100 transition-all font-semibold text-sm tracking-wide">
+            <button 
+            onClick={()=> navigate('login')}
+            className="px-8 py-3 bg-white text-gray-900 rounded-md hover:bg-gray-100 transition-all font-semibold text-sm tracking-wide">
               Mulai Gratis
-            </button>
-            <button className="px-8 py-3 border border-white text-white rounded-md hover:bg-white/10 transition-all font-semibold text-sm tracking-wide">
-              Jadwalkan Demo
             </button>
           </div>
           <p className="text-xs text-gray-400 font-medium">Tidak perlu kartu kredit untuk memulai</p>

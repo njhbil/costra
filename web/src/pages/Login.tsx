@@ -6,27 +6,42 @@ function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false)
+  const [modalMsg, setModalMsg] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleLogin = async (e) => {
+
+  //login
+  const isEmailValid = email.includes('@') && email.includes('.');
+  const isPasswordValid = password.length >= 8 ;
+  const canLogin = isEmailValid && isPasswordValid ;
+  
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const response = await fetch('http://localhost:3000/login', {
         method : 'POST',
         headers : {'Content-Type' : 'application/json'},
-        body : JSON.stringify({email, password})
+        body : JSON.stringify({email, password}),
       });
 
       const data = await response.json();
       if (response.ok){
-        localStorage.setItem('token', data.token)
+        localStorage.setItem('token', data.token);
         navigate('/dashboard')
       } else {
-        alert(`Gagal: ${data.message}`);
+        setModalMsg(data.message);
+        setShowModal(true);
       }
     } catch (error) { 
-      console.error("Koneksi error:", error)
-      alert('Koneksi Error')
+        console.error("Detail Erorr", error);
+        setModalMsg('Koneksi Terputus');
+        setShowModal(true);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -40,7 +55,9 @@ function Login() {
           <a className="btn btn-ghost text-2xl font-bold text-primary">COSTRA</a>
         </div>
         <div className="flex-none">
-          <button className="btn btn-ghost">Kembali ke Home</button>
+          <button 
+          onClick={()=> navigate('/')}
+          className="btn btn-ghost">Kembali ke Home</button>
         </div>
       </div>
 
@@ -60,11 +77,13 @@ function Login() {
                 </label>
                 <input
                   type="email"
-                  placeholder="nama@email.com"
+                  placeholder="Masukan Email"
                   className="input input-bordered w-full"
                   value={email}
                   onChange={(e)=> setEmail(e.target.value)}
                 />
+                {!isEmailValid && email.length > 0 && (
+                <p className='text xs text-red-500'>Masukan Email yang sesuai </p>)}
               </div>
 
               {/* Password Input */}
@@ -74,11 +93,14 @@ function Login() {
                 </label>
                 <input
                   type="password"
-                  placeholder="Masukkan password"
+                  placeholder="Masukan Password"
                   className="input input-bordered w-full"
                   value={password}
                   onChange={(e)=> setPassword(e.target.value)}
                 />
+                 {!isPasswordValid && password.length > 0 && (
+                <p className="text-xs text-red-500">Password minimal 8 karakter .</p>
+                )}
               </div>
 
               {/* Forgot Password */}
@@ -91,8 +113,16 @@ function Login() {
               {/* Login Button */}
               <div className="form-control mt-6">
                 <button 
+                disabled={!canLogin || isLoading}
                 type="submit" className="btn btn-primary w-full">
-                  Login
+                  {isLoading ? (
+                    <>
+                    <span className='loading loading-spinner'>
+                    </span>
+                  </>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </div>
             </form>
@@ -131,6 +161,22 @@ function Login() {
           </div>
         </div>
       </div>
+      <div className={`modal ${showModal ? 'modal-open' : ''}`}>
+        <div className="modal-box border-t-4 border-error">
+          <h3 className="font-bold text-lg text-error">Login Gagal!</h3>
+            <p className="py-4">{modalMsg}</p>
+      <div className="modal-action">
+      <button 
+        className="btn btn-primary" 
+            onClick={() => setShowModal(false)}
+      >
+        Tutup
+      </button>
+    </div>
+  </div>
+  {/* Klik di luar untuk tutup */}
+  <div className="modal-backdrop" onClick={() => setShowModal(false)}></div>
+</div>
     </div>
   );
 }

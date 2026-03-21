@@ -1,6 +1,42 @@
+import {useNavigate } from 'react-router-dom';
 import '../App.css';
+import { useEffect, useState } from 'react';
 
 function Dashboard() {
+
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('')
+
+  useEffect (()=> {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token')
+      if(!token){
+        navigate('/');
+        return;
+      }
+      try {
+        const response = await fetch('http://localhost:3000/user', {
+          method : 'GET',
+          headers : {
+            'Authorization' : `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      
+      if (response.ok){
+        const result = await response.json();
+        if (result.status === 'success') {
+        setUsername(result.data.username)
+        } else if (result.message) {
+        setUsername('User Baru')
+      }
+      }
+        
+      } catch (error) {
+        console.error('Failed to get User Data', error)
+      }
+    } ; fetchUserData();
+  }, [navigate]);
 
   return (
     <div className="flex h-screen bg-slate-50">
@@ -53,6 +89,15 @@ function Dashboard() {
           <a href="#" className="flex items-center px-4 py-3 hover:bg-slate-700 rounded-lg text-sm">
             ❓ Bantuan & Dukungan
           </a>
+          <a
+          onClick={(e)=> {
+            e.preventDefault();
+            localStorage.removeItem('token') ; 
+            navigate('/')}}
+
+          className="flex items-center px-4 py-3 hover:bg-slate-700 rounded-lg text-sm">
+            ⚙️ Log Out
+          </a>
         </nav>
 
         {/* Footer Sidebar */}
@@ -86,7 +131,7 @@ function Dashboard() {
         <div className="p-8 flex-1 overflow-y-auto">
           {/* Welcome Section */}
           <div className="mb-8 bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-lg">
-            <h1 className="text-3xl font-bold mb-2">Selamat Datang, John! 👋</h1>
+            <h1 className="text-3xl font-bold mb-2">Selamat Datang, {username} 👋</h1>
             <p className="text-blue-100">Mari kelola bisnis Anda dengan lebih efisien.</p>
           </div>
 
