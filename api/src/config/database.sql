@@ -15,8 +15,11 @@ CREATE TABLE users (
 CREATE TABLE company (
     id VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin PRIMARY KEY,
     name VARCHAR(100),
+    legal_form VARCHAR(50),
+    business_sector VARCHAR(100),
     address VARCHAR(100),
     phone VARCHAR(20) UNIQUE,
+    email VARCHAR(100) UNIQUE,
     created_by VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

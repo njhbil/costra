@@ -1,144 +1,174 @@
-import { Link, useNavigate } from 'react-router-dom';
-import cotraLogo from '../assets/Costra.png';
-import { useEffect } from 'react';
-
+import { Link, useNavigate } from "react-router-dom";
+import cotraLogo from "../assets/Costra.png";
+import { useEffect } from "react";
 
 function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkSession = async() => {
+    const checkSession = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if(!token){
-          return ;
+        const token = localStorage.getItem("token");
+        if (!token) {
+          return;
         }
-        const response = await fetch('http://localhost:3000/user', {
-          method : 'get',
-          headers : {
-            'Authorization' : `Bearer ${token}`
-          }
-          
+        const response = await fetch("http://localhost:3000/user", {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
-        if (response.ok){
-          navigate('dashboard')
+        if (response.ok) {
+          navigate("dashboard");
         }
       } catch (error) {
-        console.error('Oops! You need to login first ', error)
+        console.error("Oops! You need to login first ", error);
       }
-    }
+    };
     checkSession();
   }, [navigate]);
 
   return (
-    <div className="min-h-screen overflow-hidden bg-white">
-      {/* Navbar - Premium Minimal */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link to="/login" className="flex items-center no-animation">
+    <div className="min-h-screen bg-slate-50">
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+        <div className="max-w-368 mx-auto px-5 sm:px-8 lg:px-10 h-18 flex items-center justify-between">
+          <Link to="/" className="flex items-center no-animation">
             <img src={cotraLogo} alt="COSTRA" className="h-10 w-auto" />
           </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#about" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">Tentang</a>
-            <a href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">Fitur</a>
-            <button 
-            onClick={() => navigate('/login')}
-            className="text-sm border border-gray-300 px-6 py-2 rounded text-gray-900 hover:border-gray-400 transition-colors font-semibold"
-            >Login</button>
-            <button 
-            onClick={()=> navigate('/login')}
-            className="text-sm bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors font-semibold" > Mulai</button>
-          </div>
-          <div className="md:hidden">
-            <button className="text-gray-600 hover:text-gray-900">☰</button>
+
+          <div className="hidden md:flex items-center gap-6">
+            <a
+              href="#product"
+              className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium"
+            >
+              Product
+            </a>
+            <a
+              href="#workflow"
+              className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium"
+            >
+              Workflow
+            </a>
+            <a
+              href="#security"
+              className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium"
+            >
+              Security
+            </a>
+            <button
+              onClick={() => navigate("/login")}
+              className="text-sm border border-slate-300 px-5 py-2 rounded-lg text-slate-800 hover:border-slate-400 transition-colors font-semibold"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => navigate("/login")}
+              className="text-sm bg-slate-900 text-white px-5 py-2 rounded-lg hover:bg-slate-800 transition-colors font-semibold"
+            >
+              Try Costra
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section - Premium Luxury */}
-      <section id='about' className="relative min-h-[95vh] bg-linear-to-br from-white via-gray-50 to-white overflow-hidden flex items-center">
-        {/* Subtle decorative elements */}
-        <div className="absolute top-20 right-10 w-96 h-96 bg-teal-50/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-72 h-72 bg-indigo-50/30 rounded-full blur-3xl"></div>
+      <section className="relative overflow-hidden border-b border-slate-200 bg-linear-to-br from-white via-slate-50 to-blue-50">
+        <div className="absolute -top-24 -right-10 w-md h-112 bg-blue-100/55 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-28 -left-10 w-96 h-96 bg-cyan-100/45 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-xl h-144 bg-indigo-100/20 rounded-full blur-3xl"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left - Premium Typography */}
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <div className="inline-block" >
-                  <p className="text-xs tracking-widest text-gray-500 uppercase font-light">Solusi Manajemen</p>
-                </div>
-                <h1 className="text-6xl sm:text-7xl font-bold text-gray-900 leading-tight tracking-tight">
-                  Kelola bisnis dengan <span className="font-normal text-teal-700">elegansi</span>
-                </h1>
-                <p className="text-lg text-gray-600 leading-relaxed max-w-xl font-medium">
-                  Platform manajemen perusahaan yang dirancang untuk profesional modern. Sederhana, powerful, dan indah.
-                </p>
-              </div>
+        <div className="max-w-368 mx-auto px-5 sm:px-8 lg:px-10 py-18 md:py-24 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 xl:gap-20 items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Business Operating Platform
+              </p>
+              <h1 className="mt-3 text-5xl md:text-6xl xl:text-7xl font-bold leading-[1.05] text-slate-900 max-w-3xl">
+                Clear operations for product, sales, and team management.
+              </h1>
+              <p className="mt-5 text-lg text-slate-600 max-w-2xl leading-relaxed">
+                Costra helps growing companies centralize inventory,
+                transactions, and user access in one reliable workspace.
+              </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-8">
-                <button 
-                onClick={()=> navigate('login')}
-                className="px-8 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-all font-semibold text-sm tracking-wide">
-                  Mulai Sekarang
+              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="px-7 py-3.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-semibold text-sm"
+                >
+                  Start Managing Now
                 </button>
+                <a
+                  href="#product"
+                  className="px-7 py-3.5 border border-slate-300 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors font-semibold text-sm text-center"
+                >
+                  Explore Features
+                </a>
               </div>
 
-              {/* Premium Stats */}
-              <div className="grid grid-cols-3 gap-8 pt-12 border-t border-gray-200">
-                <div>
-                  <p className="text-3xl font-bold text-gray-900">500+</p>
-                  <p className="text-xs text-gray-500 mt-2 tracking-wide font-semibold">PERUSAHAAN</p>
+              <div className="mt-10 grid grid-cols-3 gap-4 max-w-2xl">
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                  <p className="text-3xl font-bold text-slate-900">500+</p>
+                  <p className="text-xs text-slate-500 mt-1 uppercase tracking-wide">
+                    Companies
+                  </p>
                 </div>
-                <div>
-                  <p className="text-3xl font-bold text-gray-900">10K+</p>
-                  <p className="text-xs text-gray-500 mt-2 tracking-wide font-semibold">USER AKTIF</p>
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                  <p className="text-3xl font-bold text-slate-900">10K+</p>
+                  <p className="text-xs text-slate-500 mt-1 uppercase tracking-wide">
+                    Users
+                  </p>
                 </div>
-                <div>
-                  <p className="text-3xl font-bold text-gray-900">99.9%</p>
-                  <p className="text-xs text-gray-500 mt-2 tracking-wide">UPTIME</p>
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                  <p className="text-3xl font-bold text-slate-900">99.9%</p>
+                  <p className="text-xs text-slate-500 mt-1 uppercase tracking-wide">
+                    Availability
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Right - Premium Dashboard Preview */}
-            <div className="relative hidden lg:flex justify-center">
-              <div className="w-full max-w-md">
-                {/* Main Card */}
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                  {/* Header */}
-                  <div className="h-1 bg-linear-to-r from-teal-600 to-indigo-600"></div>
-                  
-                  {/* Content */}
-                  <div className="p-8 space-y-8">
-                    {/* Main Metric */}
-                    <div className="space-y-2">
-                      <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Pendapatan Bulan Ini</p>
-                      <p className="text-4xl font-bold text-gray-900">Rp 2.4M</p>
-                      <p className="text-xs text-teal-600 font-semibold">↑ 12% dari bulan lalu</p>
-                    </div>
-
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-2 gap-6 pt-4 border-t border-gray-100">
-                      <div className="space-y-1">
-                        <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Produk</p>
-                        <p className="text-2xl font-bold text-gray-900">245</p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">User</p>
-                        <p className="text-2xl font-bold text-gray-900">42</p>
-                      </div>
-                    </div>
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <p className="text-sm font-semibold text-slate-900">
+                  Dashboard Preview
+                </p>
+                <span className="text-xs text-slate-500">
+                  Live-ready layout
+                </span>
+              </div>
+              <div className="p-6 space-y-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50">
+                    <p className="text-xs text-slate-500">Daily Transactions</p>
+                    <p className="text-3xl font-bold text-slate-900 mt-1">
+                      128
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50">
+                    <p className="text-xs text-slate-500">Revenue Today</p>
+                    <p className="text-3xl font-bold text-slate-900 mt-1">
+                      IDR 12.4M
+                    </p>
                   </div>
                 </div>
 
-                {/* Floating Badge */}
-                <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-lg p-4 border border-gray-100 w-48">
-                  <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-2">Rating</p>
-                  <p className="text-2xl font-bold text-gray-900">4.9/5.0 ⭐</p>
-                  <p className="text-xs text-gray-600 mt-1 font-medium">Dari 500+ pengguna</p>
+                <div className="rounded-2xl border border-slate-200 overflow-hidden">
+                  <div className="px-5 py-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase text-slate-600 tracking-wide">
+                    Stock Alerts
+                  </div>
+                  <div className="px-5 py-3.5 flex items-center justify-between text-sm border-b border-slate-100">
+                    <span className="text-slate-700">Vanilla Syrup 750ml</span>
+                    <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-semibold">
+                      Critical
+                    </span>
+                  </div>
+                  <div className="px-5 py-3.5 flex items-center justify-between text-sm">
+                    <span className="text-slate-700">Paper Cup 16oz</span>
+                    <span className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">
+                      Low
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -146,155 +176,175 @@ function Home() {
         </div>
       </section>
 
-      {/* Features Section - Premium Grid */}
-      <section id='features' className="py-32 bg-white border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-4">Capabilities</p>
-            <h2 className="text-5xl sm:text-6xl font-bold text-gray-900 leading-tight">Fitur Komprehensif</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="group p-8 border border-gray-100 rounded-2xl hover:border-teal-200 transition-all duration-300 hover:bg-teal-50/30">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-100 transition-colors text-xl">
-                📦
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Inventaris</h3>
-              <p className="text-gray-600 font-medium leading-relaxed text-sm">
-                Kelola produk dengan tracking stok real-time, kategori terorganisir, dan pricing yang fleksibel.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="group p-8 border border-gray-100 rounded-2xl hover:border-indigo-200 transition-all duration-300 hover:bg-indigo-50/30">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-100 transition-colors text-xl">
-                👥
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Access Control</h3>
-              <p className="text-gray-600 font-medium leading-relaxed text-sm">
-                Kelola user dengan sistem role berbasis permission yang aman dan terkontrol dengan baik.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="group p-8 border border-gray-100 rounded-2xl hover:border-teal-200 transition-all duration-300 hover:bg-teal-50/30">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-100 transition-colors text-xl">
-                📊
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Analytics</h3>
-              <p className="text-gray-600 font-medium leading-relaxed text-sm">
-                Dashboard analytics real-time dengan visualisasi data yang komprehensif dan actionable insights.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="group p-8 border border-gray-100 rounded-2xl hover:border-indigo-200 transition-all duration-300 hover:bg-indigo-50/30">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-100 transition-colors text-xl">
-                🏢
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Multi-tenant</h3>
-              <p className="text-gray-600 font-medium leading-relaxed text-sm">
-                Kelola multiple perusahaan dalam satu platform dengan data isolation yang sempurna.
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="group p-8 border border-gray-100 rounded-2xl hover:border-teal-200 transition-all duration-300 hover:bg-teal-50/30">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-100 transition-colors text-xl">
-                🔒
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Security</h3>
-              <p className="text-gray-600 font-medium leading-relaxed text-sm">
-                Enterprise-grade security dengan enkripsi end-to-end dan compliance standards internasional.
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="group p-8 border border-gray-100 rounded-2xl hover:border-indigo-200 transition-all duration-300 hover:bg-indigo-50/30">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-100 transition-colors text-xl">
-                ⚡
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Integration</h3>
-              <p className="text-gray-600 font-medium leading-relaxed text-sm">
-                REST API yang robust dengan dokumentasi lengkap untuk seamless third-party integration.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonial Section */}
-      <section className="py-24 bg-white border-t border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-10">
-          <blockquote className="space-y-6">
-            <p className="text-2xl sm:text-3xl font-bold text-gray-900 leading-relaxed">
-              "COSTRA telah mengubah cara kami mengelola operasional bisnis. Interface yang intuitif dan fitur yang powerful membuat pekerjaan kami jauh lebih efisien."
+      <section
+        id="product"
+        className="py-18 border-b border-slate-200 bg-white"
+      >
+        <div className="max-w-368 mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Product Capabilities
             </p>
-            <div>
-              <p className="text-sm font-bold text-gray-900"> Nabil Akbar</p>
-              <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mt-1">Founder, PT Teknologi Maju</p>
-            </div>
-          </blockquote>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-gray-900 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-          <h2 className="text-5xl sm:text-6xl font-bold leading-tight">Transformasi Digital Dimulai di Sini</h2>
-          <p className="text-lg text-gray-300 font-medium max-w-2xl mx-auto">
-            Bergabunglah dengan ratusan perusahaan yang telah mengoptimalkan operasional mereka bersama COSTRA.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <button 
-            onClick={()=> navigate('login')}
-            className="px-8 py-3 bg-white text-gray-900 rounded-md hover:bg-gray-100 transition-all font-semibold text-sm tracking-wide">
-              Mulai Gratis
-            </button>
+            <h2 className="mt-2 text-4xl font-bold text-slate-900">
+              Everything your operations team needs.
+            </h2>
           </div>
-          <p className="text-xs text-gray-400 font-medium">Tidak perlu kartu kredit untuk memulai</p>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+            <article className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+              <h3 className="text-base font-semibold text-slate-900">
+                Inventory Control
+              </h3>
+              <p className="text-sm text-slate-600 mt-2">
+                Track stock movement, low-stock alerts, and product updates with
+                clean records.
+              </p>
+            </article>
+            <article className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+              <h3 className="text-base font-semibold text-slate-900">
+                Transaction Tracking
+              </h3>
+              <p className="text-sm text-slate-600 mt-2">
+                Monitor payment status, transaction value, and sales activity
+                from one dashboard.
+              </p>
+            </article>
+            <article className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+              <h3 className="text-base font-semibold text-slate-900">
+                Role-Based Access
+              </h3>
+              <p className="text-sm text-slate-600 mt-2">
+                Control user permissions with role assignments for owner, admin,
+                and staff.
+              </p>
+            </article>
+            <article className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+              <h3 className="text-base font-semibold text-slate-900">
+                Business Reporting
+              </h3>
+              <p className="text-sm text-slate-600 mt-2">
+                Prepare consistent operational reports for daily and monthly
+                review cycles.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-100 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+      <section
+        id="workflow"
+        className="py-18 border-b border-slate-200 bg-slate-50"
+      >
+        <div className="max-w-368 mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <article className="bg-white border border-slate-200 rounded-2xl p-6">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                Step 1
+              </p>
+              <h3 className="text-lg font-semibold text-slate-900 mt-1">
+                Set up your company profile
+              </h3>
+              <p className="text-sm text-slate-600 mt-2">
+                Define legal profile, contact details, and primary business
+                structure.
+              </p>
+            </article>
+            <article className="bg-white border border-slate-200 rounded-2xl p-6">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                Step 2
+              </p>
+              <h3 className="text-lg font-semibold text-slate-900 mt-1">
+                Manage products and pricing
+              </h3>
+              <p className="text-sm text-slate-600 mt-2">
+                Build your product list with SKU, cost, selling price, and stock
+                tracking.
+              </p>
+            </article>
+            <article className="bg-white border border-slate-200 rounded-2xl p-6">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                Step 3
+              </p>
+              <h3 className="text-lg font-semibold text-slate-900 mt-1">
+                Execute and monitor transactions
+              </h3>
+              <p className="text-sm text-slate-600 mt-2">
+                Record daily transactions and review operational health in real
+                time.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="security"
+        className="py-18 bg-white border-b border-slate-200"
+      >
+        <div className="max-w-368 mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wide mb-4">COSTRA</h3>
-              <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                Platform manajemen perusahaan untuk bisnis modern di Indonesia.
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Security and Reliability
+              </p>
+              <h2 className="mt-2 text-4xl font-bold text-slate-900">
+                Built for secure, continuous operations.
+              </h2>
+              <p className="mt-3 text-base text-slate-600 leading-relaxed max-w-2xl">
+                Costra is designed with token-based authentication, structured
+                data access, and stable uptime for day-to-day business
+                workflows.
               </p>
             </div>
-            <div>
-              <h4 className="text-xs font-semibold text-gray-900 tracking-widest uppercase mb-4">Product</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Features</a></li>
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Pricing</a></li>
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Security</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold text-gray-900 tracking-widest uppercase mb-4">Company</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">About</a></li>
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Blog</a></li>
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Careers</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold text-gray-900 tracking-widest uppercase mb-4">Legal</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Privacy</a></li>
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Terms</a></li>
-                <li><a href="#" className="text-xs text-gray-600 hover:text-gray-900 transition-colors font-medium">Contact</a></li>
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+              <ul className="space-y-3 text-sm text-slate-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-600 font-bold">•</span>
+                  <span>
+                    Role-driven access controls for owner, admin, and staff.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-600 font-bold">•</span>
+                  <span>
+                    Company-level data separation for multi-tenant support.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-emerald-600 font-bold">•</span>
+                  <span>
+                    Reliable dashboard views for product and transaction
+                    operations.
+                  </span>
+                </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-100 pt-8 text-center">
-            <p className="text-xs text-gray-500 font-medium tracking-wide">© 2026 COSTRA. All rights reserved.</p>
-          </div>
+        </div>
+      </section>
+
+      <section className="py-18 bg-slate-900 text-white">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+            Ready to standardize your daily operations?
+          </h2>
+          <p className="mt-4 text-slate-300 max-w-3xl mx-auto text-base md:text-lg">
+            Start with product setup, enable transaction flow, and scale team
+            collaboration in one dashboard.
+          </p>
+          <button
+            onClick={() => navigate("/login")}
+            className="mt-7 px-7 py-3.5 bg-white text-slate-900 rounded-xl hover:bg-slate-100 transition-colors font-semibold text-sm"
+          >
+            Get Started
+          </button>
+        </div>
+      </section>
+
+      <footer className="bg-white py-8">
+        <div className="max-w-368 mx-auto px-5 sm:px-8 lg:px-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-sm text-slate-500">
+          <p>Costra - Business Management Platform</p>
+          <p>© 2026 Costra. All rights reserved.</p>
         </div>
       </footer>
     </div>
